@@ -35,7 +35,8 @@ public class QuestNavSubsystem extends SubsystemBase {
 
   // Transform from robot center to QuestNav camera position
   // TODO: Measure and set the actual transform values
-  private static final Transform2d ROBOT_TO_QUEST = new Transform2d(0.0, 0.0, new Rotation2d());
+  private static final Transform2d ROBOT_TO_QUEST =
+      new Transform2d(10.0, 10.0, new Rotation2d()); // in meters i tink
 
   public QuestNavSubsystem(Limelight limelight) {
     questNav = new QuestNav();
