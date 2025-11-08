@@ -90,7 +90,7 @@ public class RobotContainer {
     }
 
     // Initialize QuestNavSubsystem after drive is assigned
-    QuestNavSubsystem = new QuestNavSubsystem(null);
+    QuestNavSubsystem = new QuestNavSubsystem();
 
     // Set up auto routines
     autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -143,9 +143,9 @@ public class RobotContainer {
     // Switch to X pattern when X button is pressed
     controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-    // Reset gyro to 0° when B button is pressed
+    // Reset gyro to 0° when Y button is pressed
     controller
-        .b()
+        .y()
         .onTrue(
             Commands.runOnce(
                     () ->
@@ -170,6 +170,12 @@ public class RobotContainer {
                 new PathConstraints(
                     5.0, 5.0, Units.degreesToRadians(540), Units.degreesToRadians(720)),
                 0));
+
+    controller
+        .b()
+        .onTrue(
+            Commands.runOnce(
+                () -> QuestNavSubsystem.setRobotPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))));
   }
 
   /**

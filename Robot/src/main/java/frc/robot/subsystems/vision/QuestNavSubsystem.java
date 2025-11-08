@@ -31,20 +31,14 @@ import org.littletonrobotics.junction.Logger;
  */
 public class QuestNavSubsystem extends SubsystemBase {
   private final QuestNav questNav;
-  private final Limelight limelight;
 
   // Transform from robot center to QuestNav camera position
   // TODO: Measure and set the actual transform values
   private static final Transform2d ROBOT_TO_QUEST =
       new Transform2d(10.0, 10.0, new Rotation2d()); // in meters i tink
 
-  public QuestNavSubsystem(Limelight limelight) {
+  public QuestNavSubsystem() {
     questNav = new QuestNav();
-    this.limelight = limelight;
-  }
-
-  public void init() {
-    setRobotPose(limelight.getEstimatedPose());
   }
 
   @Override
