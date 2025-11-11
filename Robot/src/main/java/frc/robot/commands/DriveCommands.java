@@ -14,6 +14,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -154,6 +155,68 @@ public class DriveCommands {
 
         // Reset PID controller when command starts
         .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+  }
+
+  public static Command alignToPose(
+      Drive drive, Supplier<Pose2d> targetPoseSupplier, double tolerance) {
+
+    PIDController xPID = new PIDController(2, 0, 0);
+    PIDController yPID = new PIDController(2, 0, 0);
+    PIDController thetaPID = new PIDController(5, 0, 0);
+    thetaPID.enableContinuousInput(-Math.PI, Math.PI);
+
+    return Commands.startRun(
+            // Init PID controllers
+            () -> {
+              xPID.reset();
+              yPID.reset();
+              thetaPID.reset();
+            },
+            // Main
+            () -> {
+              Pose2d currentPose = drive.getPose();
+              Pose2d targetPose = targetPoseSupplier.get();
+
+              double xError = currentPose.getX() - targetPose.getX();
+              double yError = currentPose.getY() - targetPose.getY();
+              double thetaError =
+                  MathUtil.angleModulus(currentPose.getRotation().getRadians())
+                      - MathUtil.angleModulus(targetPose.getRotation().getRadians());
+
+              double x = xPID.calculate(xError, 0);
+              double y = yPID.calculate(yError, 0);
+              double theta = thetaPID.calculate(thetaError, 0);
+
+              if (Math.hypot(x, y) > drive.getMaxLinearSpeedMetersPerSec()) {
+                double scale = drive.getMaxLinearSpeedMetersPerSec() / Math.hypot(x, y);
+                x *= scale;
+                y *= scale;
+              }
+
+              theta =
+                  MathUtil.clamp(
+                      theta,
+                      -drive.getMaxAngularSpeedRadPerSec(),
+                      drive.getMaxAngularSpeedRadPerSec());
+
+              drive.runVelocity(
+                  ChassisSpeeds.fromFieldRelativeSpeeds(
+                      new ChassisSpeeds(x, y, theta), drive.getRotation()));
+            },
+            drive)
+        .until(
+            () ->
+                drive
+                        .getPose()
+                        .getTranslation()
+                        .getDistance(targetPoseSupplier.get().getTranslation())
+                    < tolerance)
+        .andThen(
+            () -> {
+              xPID.close();
+              yPID.close();
+              thetaPID.close();
+            });
   }
 
   /**
