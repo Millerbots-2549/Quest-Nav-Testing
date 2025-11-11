@@ -37,6 +37,6 @@ public final class Constants {
     REPLAY
   }
 
-  public static final boolean FUN_MODE = false; // i promise this does nothing
+  public static final boolean FUN_MODE = false; // make true and see how jameson drives :)
   public static final boolean CompetitionMode = false; // turns off logging. dont touch
 }
