@@ -153,27 +153,19 @@ public class RobotContainer {
                 .ignoringDisable(true));
 
     controller
-        .leftBumper()
-        .onTrue(
-            AutoBuilder.pathfindToPose(
-                new Pose2d(16.45, 1, Rotation2d.fromDegrees(125)),
-                new PathConstraints(
-                    5.0, 5.0, Units.degreesToRadians(540), Units.degreesToRadians(720)),
-                0));
-    controller
-        .rightBumper()
-        .onTrue(
-            AutoBuilder.pathfindToPose(
-                new Pose2d(12.30, 5, Rotation2d.fromDegrees(-150)),
-                new PathConstraints(
-                    5.0, 5.0, Units.degreesToRadians(540), Units.degreesToRadians(720)),
-                0));
-
-    controller
         .b()
         .onTrue(
             Commands.runOnce(
                 () -> QuestNavSubsystem.setRobotPose(new Pose2d(0, 0, Rotation2d.fromDegrees(0)))));
+
+    controller
+        .rightBumper()
+        .onTrue(
+            DriveCommands.alignToPose(
+                drive,
+                () -> new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0)), // target pose
+                0.04 // tolerance in meters
+                ));
   }
 
   /**
