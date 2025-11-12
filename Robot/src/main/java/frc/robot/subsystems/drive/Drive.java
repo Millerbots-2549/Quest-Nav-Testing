@@ -89,6 +89,7 @@ public class Drive extends SubsystemBase {
 
   static final Lock odometryLock = new ReentrantLock();
   private final GyroIO gyroIO;
+  private final QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem();
   private final GyroIOInputsAutoLogged gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine sysId;
@@ -335,6 +336,7 @@ public class Drive extends SubsystemBase {
   @AutoLogOutput(key = "Odometry/Robot")
   public Pose2d getPose() {
     return poseEstimator.getEstimatedPosition();
+    // return questNavSubsystem.getRobotPose();
   }
 
   /** Returns the current odometry rotation. */
@@ -345,7 +347,6 @@ public class Drive extends SubsystemBase {
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);
-    QuestNavSubsystem questNavSubsystem = new QuestNavSubsystem();
     questNavSubsystem.setRobotPose(pose);
   }
 
