@@ -158,7 +158,7 @@ public class DriveCommands {
   }
 
   public static Command alignToPose(
-      Drive drive, Supplier<Pose2d> targetPoseSupplier, double tolerance) {
+      Drive drive, Supplier<Pose2d> targetPoseSupplier, double xytolerance, double angleTolerance) {
 
     PIDController xPID = new PIDController(2, 0, 0);
     PIDController yPID = new PIDController(2, 0, 0);
@@ -207,10 +207,15 @@ public class DriveCommands {
         .until(
             () ->
                 drive
-                        .getPose()
-                        .getTranslation()
-                        .getDistance(targetPoseSupplier.get().getTranslation())
-                    < tolerance)
+                            .getPose()
+                            .getTranslation()
+                            .getDistance(targetPoseSupplier.get().getTranslation())
+                        < xytolerance
+                    && Math.abs(
+                            MathUtil.angleModulus(
+                                drive.getPose().getRotation().getRadians()
+                                    - targetPoseSupplier.get().getRotation().getRadians()))
+                        < Math.toRadians(angleTolerance))
         .andThen(
             () -> {
               xPID.close();
