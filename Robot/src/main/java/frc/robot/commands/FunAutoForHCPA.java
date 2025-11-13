@@ -22,12 +22,12 @@ public class FunAutoForHCPA extends SequentialCommandGroup {
 
     addCommands(
         AutoBuilder.pathfindToPose(AlignPose1, constraints, 0.0),
-        DriveCommands.alignToPose(drive, () -> AlignPose1, 0.04),
+        DriveCommands.alignToPose(drive, () -> AlignPose1, 0.06, 0.5),
         AutoBuilder.pathfindToPose(AlignPose2, constraints, 0.0),
-        DriveCommands.alignToPose(drive, () -> AlignPose2, 0.04),
+        DriveCommands.alignToPose(drive, () -> AlignPose2, 0.06, 0.5),
         AutoBuilder.pathfindToPose(AlignPose3, constraints, 0.0),
-        DriveCommands.alignToPose(drive, () -> AlignPose3, 0.04),
+        DriveCommands.alignToPose(drive, () -> AlignPose3, 0.06, 0.5),
         AutoBuilder.pathfindToPose(AlignPose4, constraints, 0.0),
-        DriveCommands.alignToPose(drive, () -> AlignPose4, 0.04));
+        DriveCommands.alignToPose(drive, () -> AlignPose4, 0.06, 0.5));
   }
 }

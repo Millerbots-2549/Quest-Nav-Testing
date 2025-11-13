@@ -169,7 +169,8 @@ public class RobotContainer {
             DriveCommands.alignToPose(
                 drive,
                 () -> new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0)), // target pose
-                0.06 // tolerance in meters
+                0.06,
+                0.5 // tolerance in meters
                 ));
     controller
         .leftBumper()
