@@ -165,7 +165,7 @@ public class RobotContainer {
 
     controller
         .rightBumper()
-        .onTrue(
+        .whileTrue(
             DriveCommands.alignToPose(
                 drive,
                 () -> new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0)), // target pose
@@ -177,7 +177,7 @@ public class RobotContainer {
             AutoBuilder.pathfindToPose(
                 new Pose2d(2.0, 0.0, Rotation2d.fromDegrees(0)),
                 new PathConstraints(
-                    5.0, 5.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
+                    5.0, 8.0, Units.degreesToRadians(540), Units.degreesToRadians(720))));
   }
 
   /**
